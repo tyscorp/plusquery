@@ -1,6 +1,6 @@
 /*!
  * plusQuery JavaScript Library @VERSION
- * https://github.com/tyscorp/plusquery/
+ * http://github.com/tyscorp/plusquery/
  *
  * Copyright (C) 2011 by Tyson Cleary
  * 
@@ -52,9 +52,10 @@ var plusQuery = (function () {
 	 *  This is an implementation to get around the fact that these "objects"
 	 *  have no prototype property, and so can't really be changed.
 	 *
-	 *  The property "this.original" is there to access the original interface.
-	 *  You /can/ create objects directly from $.customObjects, however you should
-	 *  use the plusQuery constructor so you inherit all of plusQuery's functions, etc.
+	 *  The property "this.proxy" is there to access the original interface.
+	 *  (proxy pattern) You /can/ create objects directly from $.customObjects,
+	 *  however you should use the plusQuery constructor so you inherit all of 
+	 *  plusQuery's functions, etc.
 	 *
 	 *  This "solves" the problem here: http://msghelp.net/showthread.php?tid=62818
 	 *
@@ -64,7 +65,7 @@ var plusQuery = (function () {
 	 *
 	 *  var chatWnd = $(chatWnd);
 	 *  chatWnd.SendMessage = function(Text) {
-	 *      this.original.SendMessage("[Ye] " + Text);
+	 *      this.proxy.SendMessage("[Ye] " + Text);
 	 *  }
 	 *
 	 *
@@ -72,367 +73,467 @@ var plusQuery = (function () {
 	 *  implement a message prefix.
 	 *
 	 *  $.customObjects.ChatWnd.prototype.SendMessage = function(Text) {
-	 *      this.original.SendMessage("[Ye] " + Text);
+	 *      this.proxy.SendMessage("[Ye] " + Text);
 	 *  }
 	 */
 	plusQuery.customObjects = {
 	
 		Debug: function (obj) {
-			this.original = obj;
-			this.DebuggingWindowVisible = this.original.DebuggingWindowVisible;
+			this.proxy = obj;
+			this.type = "Debug";
+			
+			this.DebuggingWindowVisible = this.proxy.DebuggingWindowVisible;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		Messenger: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "Messenger";
 			
-			this.Version = obj.Version;
-			this.VersionBuild = obj.VersionBuild;
-			this.ContactListWndHandle = obj.ContactListWndHandle;
-			this.CurrentChats = obj.CurrentChats;
-			this.ReceiveFileDir = obj.ReceiveFileDir;
-			this.MyContacts = obj.MyContacts;
-			this.MyEmail = obj.MyEmail;
-			this.MyUserId = obj.MyUserId;
-			this.MyStatus = obj.MyStatus;
-			this.MyName = obj.MyName;
-			this.MyPersonalMessage = obj.MyPersonalMessage;
-			this.MyCurrentMedia = obj.MyCurrentMedia;
-			this.MyDisplayPicture = obj.MyDisplayPicture;
-			this.CustomEmoticons = obj.CustomEmoticons;
+			this.Version = this.proxy.Version;
+			this.VersionBuild = this.proxy.VersionBuild;
+			this.ContactListWndHandle = this.proxy.ContactListWndHandle;
+			this.CurrentChats = this.proxy.CurrentChats;
+			this.ReceiveFileDir = this.proxy.ReceiveFileDir;
+			this.MyContacts = this.proxy.MyContacts;
+			this.MyEmail = this.proxy.MyEmail;
+			this.MyUserId = this.proxy.MyUserId;
+			this.MyStatus = this.proxy.MyStatus;
+			this.MyName = this.proxy.MyName;
+			this.MyPersonalMessage = this.proxy.MyPersonalMessage;
+			this.MyCurrentMedia = this.proxy.MyCurrentMedia;
+			this.MyDisplayPicture = this.proxy.MyDisplayPicture;
+			this.CustomEmoticons = this.proxy.CustomEmoticons;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		MsgPlus: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "MsgPlus";
 			
-			this.Version = obj.Version;
-			this.VersionBuild = obj.VersionBuild;
-			this.ScriptRegPath = obj.ScriptRegPath;
-			this.ScriptFilesPath = obj.ScriptFilesPath;
-			this.MessengerIsLocked = obj.MessengerIsLocked;
-			this.UILangCode = obj.UILangCode;
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		ChatWnds: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "ChatWnds";
 			
-			this.Count = obj.Count;
+			this.Count = this.proxy.Count;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		ChatWnd: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "ChatWnd";
 		
-			this.Handle = obj.Handle;
-			this.Contacts = obj.Contacts;
-			this.EditText = obj.EditText;
-			this.EditChangeAllowed = obj.EditChangeAllowed;
-			this.ChatLogEnabled = obj.ChatLogEnabled;
-			this.OverrideFmtEnabled = obj.OverrideFmtEnabled;
-			this.IsMobileChat = obj.IsMobileChat;
+			this.Handle = this.proxy.Handle;
+			this.Contacts = this.proxy.Contacts;
+			this.EditText = this.proxy.EditText;
+			this.EditChangeAllowed = this.proxy.EditChangeAllowed;
+			this.ChatLogEnabled = this.proxy.ChatLogEnabled;
+			this.OverrideFmtEnabled = this.proxy.OverrideFmtEnabled;
+			this.IsMobileChat = this.proxy.IsMobileChat;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		Contacts: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "Contacts";
 			
-			this.Count = obj.Count;
+			this.Count = this.proxy.Count;
 			
 			return this;
 		},
 		
 		Contact: function (obj) {
-			this.original = obj;
-			this.Email = obj.Email;
-			this.Network = obj.Network;
-			this.Status = obj.Status;
-			this.Name = obj.Name;
-			this.PersonalMessage = obj.PersonalMessage;
-			this.CurrentMedia = obj.CurrentMedia;
-			this.Blocked = obj.Blocked;
-			this.DisplayPicture = obj.DisplayPicture;
-			this.IsFloating = obj.IsFloating;
-			this.ProfileColor = obj.ProfileColor;
+			this.proxy = obj;
+			this.type = "Contact";
+			
+			this.Email = this.proxy.Email;
+			this.Network = this.proxy.Network;
+			this.Status = this.proxy.Status;
+			this.Name = this.proxy.Name;
+			this.PersonalMessage = this.proxy.PersonalMessage;
+			this.CurrentMedia = this.proxy.CurrentMedia;
+			this.Blocked = this.proxy.Blocked;
+			this.DisplayPicture = this.proxy.DisplayPicture;
+			this.IsFloating = this.proxy.IsFloating;
+			this.ProfileColor = this.proxy.ProfileColor;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		Emoticons: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "Emoticons";
 			
-			this.Count = obj.Count;
+			this.Count = this.proxy.Count;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		Emoticon: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "Emoticon";
 			
-			this.Shortcut = obj.Shortcut;
-			this.Name = obj.Name;
-			this.PictureFile = obj.PictureFile;
+			this.Shortcut = this.proxy.Shortcut;
+			this.Name = this.proxy.Name;
+			this.PictureFile = this.proxy.PictureFile;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		PlusWnd: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "PlusWnd";
 			
-			this.Handle = obj.Handle;
-			this.Visible = obj.Visible;
-			this.WindowId = obj.WindowId;
-			this.BaseColor = obj.BaseColor;
+			this.Handle = this.proxy.Handle;
+			this.Visible = this.proxy.Visible;
+			this.WindowId = this.proxy.WindowId;
+			this.BaseColor = this.proxy.BaseColor;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		Interop: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "Interop";
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		},
 		
 		DataBloc: function (obj) {
-			this.original = obj;
+			this.proxy = obj;
+			this.type = "DataBloc";
 			
-			this.Size = obj.Size;
-			this.DataPtr = obj.DataPtr;
+			this.Size = this.proxy.Size;
+			this.DataPtr = this.proxy.DataPtr;
+			
+			this.init.call(this, this.proxy);
 			
 			return this;
 		}
 	};
-	
+
 	plusQuery.customObjects.Debug.prototype = {
-		Trace: function (Text) {
-			return this.original.Trace(Text);
+		init: function (obj) {
+			
 		},
+		
+		Trace: function (Text) {
+			return this.proxy.Trace(Text);
+		},
+		
 		ClearDebuggingWindow: function () {
-			return this.original.ClearDebuggingWindow();
-		}
+			return this.proxy.ClearDebuggingWindow();
+		}	
 	};
 	
 	plusQuery.customObjects.Messenger.prototype = {
+		init: function () {
+			
+		},
+		
 		AutoSignin: function () {
-			return this.original.AutoSignin();
+			return this.proxy.AutoSignin();
 		},
+		
 		Signout: function () {
-			return this.original.Signout();
+			return this.proxy.Signout();
 		},
+		
 		OpenChat: function (Contact) {
-			return this.original.OpenChat(Contact);
+			return this.proxy.OpenChat(Contact);
 		}
 	};
 	
 	plusQuery.customObjects.MsgPlus.prototype = {
-		DisplayToast: function (Title, Message, SoundFile, Callback,
-			CallbackParam) {
-				
-			return this.original.DisplayToast(Title, Message, SoundFile, Callback,
-				CallbackParam);
+		init: function () {
+			
 		},
-		DisplayToastContact: function (Title, ContactName, Message,
-			SoundFile, Callback, CallbackParam, Contact) {
-				
-			return this.original.DisplayToastContact(Title, ContactName, Message,
-				SoundFile, Callback, CallbackParam, Contact);
+		
+		DisplayToast: function (Title, Message, SoundFile, Callback, CallbackParam) {
+			return this.proxy.DisplayToast(Title, Message, SoundFile, Callback, CallbackParam);
 		},
+		
+		DisplayToastContact: function (Title, ContactName, Message, SoundFile, Callback, CallbackParam, Contact) {
+			return this.proxy.DisplayToastContact(Title, ContactName, Message, SoundFile, Callback, CallbackParam, Contact);
+		},
+		
 		CreateWnd: function (XmlFile, WindowId, Options) {
-			return this.original.CreateWnd(XmlFile, WindowId, Options);
+			return this.proxy.CreateWnd(XmlFile, WindowId, Options);
 		},
-		CreateChildWnd: function (Parent, XmlFile, WindowId, PosX,
-			PosY, Visible) {
-			
-			return this.original.CreateChildWnd(Parent, XmlFile, WindowId, PosX,
-				PosY, Visible);
+		
+		CreateChildWnd: function (Parent, XmlFile, WindowId, PosX, PosY, Visible) {
+			return this.proxy.CreateChildWnd(Parent, XmlFile, WindowId, PosX, PosY, Visible);
 		},
+		
 		AddTimer: function (TimerId, Elapse) {
-			return this.original.AddTimer(TimerId, Elapse);
+			return this.proxy.AddTimer(TimerId, Elapse);
 		},
+		
 		CancelTimer: function (TimerId) {
-			return this.original.CancelTimer(TimerId);
+			return this.proxy.CancelTimer(TimerId);
 		},
+		
 		PlaySound: function (SoundFile, MaxPlayTime) {
-			return this.original.PlaySound(SoundFile, MaxPlayTime);
+			return this.proxy.PlaySound(SoundFile, MaxPlayTime);
 		},
+		
 		LockMessenger: function (Lock) {
-			return this.original.LockMessenger(Lock);
+			return this.proxy.LockMessenger(Lock);
 		},
+		
 		LogEvent: function (Origin, Description, Icon) {
-			return this.original.LogEvent(Origin, Description, Icon);
+			return this.proxy.LogEvent(Origin, Description, Icon);
 		},
+		
 		RemoveFormatCodes: function (Text) {
-			return this.original.RemoveFormatCodes(Text);
+			return this.proxy.RemoveFormatCodes(Text);
 		},
+		
 		DownloadFile: function (Url, OutFile, User, Password) {
-			return this.original.DownloadFile(Url, OutFile, User, Password);
+			return this.proxy.DownloadFile(Url, OutFile, User, Password);
 		},
-		UploadFileFTP: function (SourceFile, Server, User, Password,
-			Destination, PassiveMode, Port) {
-			
-			return this.original.UploadFileFTP(SourceFile, Server, User, Password,
-				Destination, PassiveMode, Port);
+		
+		UploadFileFTP: function (SourceFile, Server, User, Password, Destination, PassiveMode, Port) {	
+			return this.proxy.UploadFileFTP(SourceFile, Server, User, Password, Destination, PassiveMode, Port);
 		},
+		
 		LoadScriptFile: function (ScriptFile) {
-			return this.original.LoadScriptFile(ScriptFile);
+			return this.proxy.LoadScriptFile(ScriptFile);
 		},
-		ExtractFromZIP: function (ZipFile, DestDirectory, FileNames,
-			Password) {
-			
-			return this.original.ExtractFromZIP(ZipFile, DestDirectory, FileNames,
-				Password);
+		
+		ExtractFromZIP: function (ZipFile, DestDirectory, FileNames, Password) {
+			return this.proxy.ExtractFromZIP(ZipFile, DestDirectory, FileNames, Password);
 		}
 	};
 	
 	plusQuery.customObjects.ChatWnds.prototype = {
+		init: function () {
+			
+		},
+		
 		Iterator: function () {
-			return this.original.Iterator();
+			return this.proxy.Iterator();
 		}
 	};
 	
 	plusQuery.customObjects.ChatWnd.prototype = {
+		init: function () {
+			
+		},
+		
 		SendMessage: function (Message) {
-			return this.original.SendMessage(Message);
+			return this.proxy.SendMessage(Message);
 		},
+		
 		SendFile: function (FilePath) {
-			return this.original.SendFile(FilePath);
+			return this.proxy.SendFile(FilePath);
 		},
+		
 		AddContact: function (Email) {
-			return this.original.AddContact(Email);
+			return this.proxy.AddContact(Email);
 		},
+		
 		DisplayInfoMessage: function (Message, Duration, ForceNow) {
-			return this.original.DisplayInfoMessage(Message, Duration, ForceNow);
+			return this.proxy.DisplayInfoMessage(Message, Duration, ForceNow);
 		},
+		
 		ResetInfoMessage: function () {
-			return this.original.ResetInfoMessage();
+			return this.proxy.ResetInfoMessage();
 		},
+		
 		EditText_SetCurSelStart: function () {
-			return this.original.EditText_SetCurSelStart();
+			return this.proxy.EditText_SetCurSelStart();
 		},
+		
 		EditText_SetCurSelEnd: function () {
-			return this.original.EditText_SetCurSelEnd();
+			return this.proxy.EditText_SetCurSelEnd();
 		},
+		
 		EditText_SetCurSel: function (Start, End) {
-			return this.original.EditText_SetCurSel(Start, End);
+			return this.proxy.EditText_SetCurSel(Start, End);
 		},
+		
 		EditText_ReplaceSel: function (Text) {
-			return this.original.EditText_ReplaceSel(Text);
+			return this.proxy.EditText_ReplaceSel(Text);
 		},
+		
 		HistoryText_GetCurSelStart: function () {
-			return this.original.HistoryText_GetCurSelStart();
+			return this.proxy.HistoryText_GetCurSelStart();
 		},
+		
 		HistoryText_GetCurSelEnd: function () {
-			return this.original.HistoryText_GetCurSelEnd();
+			return this.proxy.HistoryText_GetCurSelEnd();
 		},
+		
 		HistoryText_GetTextRange: function (StartIdx, EndIdx, AddObjectCodes) {
-			return this.original.HistoryText_GetTextRange(StartIdx, EndIdx,
-				AddObjectCodes);
+			return this.proxy.HistoryText_GetTextRange(StartIdx, EndIdx, AddObjectCodes);
 		}
 	};
 	
 	plusQuery.customObjects.Contacts.prototype = {
-		Iterator: function () {
-			return this.original.Iterator();
+		init: function () {
+			
 		},
+		
+		Iterator: function () {
+			return this.proxy.Iterator();
+		},
+		
 		GetContact: function (Email) {
-			return this.original.GetContact(Email);
+			return this.proxy.GetContact(Email);
 		}
 	};
 	
 	plusQuery.customObjects.Contact.prototype = {
-		// No functions here!
+		init: function () {
+			
+		}
 	};
 	
 	plusQuery.customObjects.Emoticons.prototype = {
-		Iterator: function () {
-			return this.original.Iterator();
+		init: function () {
+			
 		},
+		
+		Iterator: function () {
+			return this.proxy.Iterator();
+		},
+		
 		GetEmoticon: function (Shortcut) {
 			return original.GetEmoticon(Shortcut);
 		}
 	};
 	
 	plusQuery.customObjects.Emoticon.prototype = {
-		// No functions here!
+		init: function () {
+			
+		}
 	};
 	
 	plusQuery.customObjects.PlusWnd.prototype = {
-		// So...many...cbf.
+		init: function () {
+			
+		}
 	};
 	
 	plusQuery.customObjects.Interop.prototype = {
+		init: function () {
+			
+		},
+		
 		Call: function (DllName, FunctionName, Param1, Param2,
 			Param3, Param4, Param5, Param6, Param7, Param8, Param9,
 			Param10, Param11, Param12) {
 			
-			return this.original.Call(DllName, FunctionName, Param1, Param2,
+			return this.proxy.Call(DllName, FunctionName, Param1, Param2,
 				Param3, Param4, Param5, Param6, Param7, Param8, Param9,
 				Param10, Param11, Param12);
 		},
+		
 		Call2: function (DllName, FunctionName, Param1, Param2,
 			Param3, Param4, Param5, Param6, Param7, Param8, Param9,
 			Param10, Param11, Param12) {
 			
-			return this.original.Call2(DllName, FunctionName, Param1, Param2,
+			return this.proxy.Call2(DllName, FunctionName, Param1, Param2,
 				Param3, Param4, Param5, Param6, Param7, Param8, Param9,
 				Param10, Param11, Param12);
 		},
+		
 		FreeDll: function (DllName) {
-			return this.original.FreeDll(DllName);
+			return this.proxy.FreeDll(DllName);
 		},
+		
 		GetLastError: function () {
-			return this.original.GetLastError();
+			return this.proxy.GetLastError();
 		},
+		
 		Allocate: function (InitialSize) {
-			return this.original.Allocate(InitialSize);
+			return this.proxy.Allocate(InitialSize);
 		},
+		
 		GetCallbackPtr: function (FunctionName) {
-			return this.original.GetCallbackPtr(FunctionName);
+			return this.proxy.GetCallbackPtr(FunctionName);
 		}
 	};
 	
 	plusQuery.customObjects.DataBloc.prototype = {
+		init: function () {
+			
+		},
+		
 		GetAt: function (Offset) {
-			return this.original.GetAt(Offset);
+			return this.proxy.GetAt(Offset);
 		},
+		
 		SetAt: function (Offset, Byte) {
-			return this.original.SetAt(Offset, Byte);
+			return this.proxy.SetAt(Offset, Byte);
 		},
+		
 		ReadString: function () {
-			return this.original.ReadString();
+			return this.proxy.ReadString();
 		},
+		
 		WriteString: function (Offset, String, WriteUnicode) {
-			return this.original.WriteString(Offset, String, WriteUnicode);
+			return this.proxy.WriteString(Offset, String, WriteUnicode);
 		},
+		
 		ReadBSTR: function () {
-			return this.original.ReadBSTR();
+			return this.proxy.ReadBSTR();
 		},
+		
 		WriteBSTR: function () {
-			return this.original.WriteBSTR();
+			return this.proxy.WriteBSTR();
 		},
+		
 		ReadWORD: function () {
-			return this.original.ReadWORD();
+			return this.proxy.ReadWORD();
 		},
+		
 		WriteWORD: function () {
-			return this.original.WriteWORD();
+			return this.proxy.WriteWORD();
 		},
+		
 		ReadDWORD: function () {
-			return this.original.ReadDWORD();
+			return this.proxy.ReadDWORD();
 		},
+		
 		WriteDWORD: function () {
-			return this.original.WriteDWORD();
+			return this.proxy.WriteDWORD();
 		},
+		
 		ReadInterfacePtr: function () {
-			return this.original.ReadInterfacePtr();
+			return this.proxy.ReadInterfacePtr();
 		},
+		
 		WriteInterfacePtr: function () {
-			return this.original.WriteInterfacePtr();
+			return this.proxy.WriteInterfacePtr();
 		}
 	};
 	
@@ -635,6 +736,7 @@ var plusQuery = (function () {
 		return target;
 	};
 	
+	// Misc functions taken from jQuery
 	plusQuery.extend({
 	
 		isFunction: function (obj) {
@@ -728,7 +830,7 @@ var plusQuery = (function () {
 			return object;
 		},
 
-		// Trims text of whitespace using fastest /JScript/ regexp
+		// Trims text of whitespace using one of the "fastest" JScript regexps
 		trim: function (text) {
 			return text === null ?
 				"" :
@@ -740,28 +842,247 @@ var plusQuery = (function () {
 
 		// Current time in MS
 		now: function () {
-			return (new Date()).getTime();
+				return (new Date()).getTime();
+		}
+	});
+	
+	plusQuery.Event = function (obj, type, fn) {
+		this.obj = obj;
+		this.type = type;
+		this.fn = fn;
+		this.timeStamp = plusQuery.now();
+		this.guid = plusQuery.guid++;
+	}
+	
+	plusQuery.extend({
+		event: {
+			events: {},
+			
+			add: function (obj, type, fn) {
+				var event = new plusQuery.Event(obj, type, fn);
+				plusQuery.event.events[event.guid] = event;
+			},
+
+			remove: function (obj, type, fn) {
+				
+			},
+			
+			trigger: function (type, args) {
+				plusQuery.each(type.split(" "), function (i, type) {
+					plusQuery.each(plusQuery.event.events, function (j, event) {
+						if (type === event.type) {
+							event.fn.apply(this, args);
+						}
+					}.bind(this));
+				}.bind(this));
+			}
+		},
+		
+		bind: function (type, fn) {
+			plusQuery.event.add(plusQuery, type, fn);
+			
+			return this;
+		},
+		
+		unbind: function (type, fn) {
+			plusQuery.event.remove(plusQuery, type, fn);
+
+			return this;
+		},
+		
+		trigger: function (type, args) {
+			return plusQuery.event.trigger(type, args);
+		}
+	});
+	
+	plusQuery.fn.extend({
+		bind: function (type, fn) {
+			if (this.length === 0) {
+				plusQuery.event.add(this, type, fn);
+			} else {
+				for (var i = 0, l = this.length; i < l; i++) {
+					plusQuery.event.add(this[i], type, fn);
+				}
+			}
+			
+			return this;
+		},
+		
+		unbind: function (type, fn) {
+			if (this.length !== 0) {
+				plusQuery.event.remove(this, type, fn);
+			} else {
+				for (var i = 0, l = this.length; i < l; i++) {
+					plusQuery.event.remove(this[i], type, fn);
+				}
+			}
+
+			return this;
 		}
 	});
 	
 	plusQuery.each("Boolean Number String Function Array Date RegExp Object".split(" "), function (i, name) {
-		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+		class2type["[object " + name + "]"] = name.toLowerCase();
 	});
 	
 	return plusQuery;
 	
 }());
 
-// Bind prototype written by Juriy Zaytsev
-Function.prototype.bind = (function (_slice) {
+function OnEvent_Signin() {
+	return plusQuery.trigger.call(this, "Signin", arguments);
+}
+
+function OnEvent_SigninReady() {
+	return plusQuery.trigger.call(this, "SigninReady", arguments);
+}
+
+function OnEvent_Signout() {
+	return plusQuery.trigger.call(this, "Signout", arguments);
+}
+
+function OnEvent_MyStatusChange() {
+	return plusQuery.trigger.call(this, "MyStatusChange", arguments);
+}
+
+function OnEvent_MyNameChange() {
+	return plusQuery.trigger.call(this, "MyNameChange", arguments);
+}
+
+function OnEvent_MyPsmChange() {
+	return plusQuery.trigger.call(this, "MyPsmChange", arguments);
+}
+
+function OnEvent_MyMediaChange() {
+	return plusQuery.trigger.call(this, "MyMediaChange", arguments);
+}
+
+function OnEvent_ContactSignin() {
+	return plusQuery.trigger.call(this, "ContactSignin", arguments);
+}
+
+function OnEvent_ContactSignout() {
+	return plusQuery.trigger.call(this, "ContactSignout", arguments);
+}
+
+function OnEvent_ContactStatusChange() {
+	return plusQuery.trigger.call(this, "ContactStatusChange", arguments);
+}
+
+function OnEvent_ContactNameChange() {
+	return plusQuery.trigger.call(this, "ContactNameChange", arguments);
+}
+
+function OnEvent_ContactPsmChange() {
+	return plusQuery.trigger.call(this, "ContactPsmChange", arguments);
+}
+
+function OnEvent_ContactMediaChange() {
+	return plusQuery.trigger.call(this, "ContactMediaChange", arguments);
+}
+
+function OnEvent_ContactBlocked() {
+	return plusQuery.trigger.call(this, "ContactBlocked", arguments);
+}
+
+function OnEvent_ContactUnblocked() {
+	return plusQuery.trigger.call(this, "ContactUnblocked", arguments);
+}
+
+function OnEvent_ContactListWndCreated() {
+	return plusQuery.trigger.call(this, "ContactListWndCreated", arguments);
+}
+
+function OnEvent_ContactListWndDestroyed() {
+	return plusQuery.trigger.call(this, "ContactListWndDestroyed", arguments);
+}
+
+function OnEvent_ChatWndCreated() {
+	return plusQuery.trigger.call(this, "ChatWndCreated", arguments);
+}
+
+function OnEvent_ChatWndDestroyed() {
+	return plusQuery.trigger.call(this, "ChatWndDestroyed", arguments);
+}
+
+function OnEvent_ChatWndContactAdded() {
+	return plusQuery.trigger.call(this, "ChatWndContactAdded", arguments);
+}
+
+function OnEvent_ChatWndContactRemoved() {
+	return plusQuery.trigger.call(this, "ChatWndContactRemoved", arguments);
+}
+
+function OnEvent_ChatWndReceiveMessage() {
+	return plusQuery.trigger.call(this, "ChatWndReceiveMessage", arguments);
+}
+
+function OnEvent_ChatWndSendMessage() {
+	return plusQuery.trigger.call(this, "ChatWndSendMessage", arguments);
+}
+
+/*function OnEvent_ChatWndEditKeyDown() {
+	return plusQuery.trigger.call(this, "ChatWndEditKeyDown", arguments);
+}*/
+
+function OnEvent_Initialize() {
+	return plusQuery.trigger.call(this, "Initialize", arguments);
+}
+
+function OnEvent_Uninitialize() {
+	return plusQuery.trigger.call(this, "Uninitialize", arguments);
+}
+
+function OnEvent_MessengerLocked() {
+	return plusQuery.trigger.call(this, "MessengerLocked", arguments);
+}
+
+function OnEvent_MessengerUnlocked() {
+	return plusQuery.trigger.call(this, "MessengerUnlocked", arguments);
+}
+
+function OnEvent_Timer() {
+	return plusQuery.trigger.call(this, "Timer", arguments);
+}
+
+function OnEvent_MenuClicked() {
+	return plusQuery.trigger.call(this, "MenuClicked", arguments);
+}
+
+function OnEvent_EnterPersonalizedStatus() {
+	return plusQuery.trigger.call(this, "EnterPersonalizedStatus", arguments);
+}
+
+function OnEvent_LeavePersonalizedStatus() {
+	return plusQuery.trigger.call(this, "LeavePersonalizedStatus", arguments);
+}
+
+function OnEvent_DownloadFileComplete() {
+	return plusQuery.trigger.call(this, "DownloadFileComplete", arguments);
+}
+
+function OnEvent_UploadFileComplete() {
+	return plusQuery.trigger.call(this, "UploadFileComplete", arguments);
+}
+
+function OnGetScriptMenu() {
+	return plusQuery.trigger.call(this, "OnGetScriptMenu", arguments);
+}
+
+function OnGetScriptCommands() {
+	return plusQuery.trigger.call(this, "OnGetScriptCommands", arguments);
+}
+
+// Bind function written by Juriy "kangax" Zaytsev, refactored slightly
+Function.prototype.bind = (function (slice) {
 	return function (context) {
 		var fn = this,
-			args = _slice.call(arguments, 1);
+			args = slice.call(arguments, 1);
 
 		if (args.length) {
 			return function () {
 				return arguments.length
-					? fn.apply(context, args.concat(_slice.call(arguments)))
+					? fn.apply(context, args.concat(slice.call(arguments)))
 					: fn.apply(context, args);
 			};
 		}
