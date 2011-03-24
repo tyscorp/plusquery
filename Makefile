@@ -11,6 +11,7 @@ POST_COMPILER = ${JS_ENGINE} ${BUILD_DIR}/post-compile.js
 
 BASE_FILES = ${SRC_DIR}/extend.js\
 	${SRC_DIR}/core.js\
+	${SRC_DIR}/interfaces.js\
 	${SRC_DIR}/event.js\
 	${SRC_DIR}/timer.js\
 	${SRC_DIR}/commands.js
