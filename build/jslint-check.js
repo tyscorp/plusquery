@@ -4,16 +4,25 @@ var JSLINT = require("./lib/jslint").JSLINT,
 
 JSLINT(src, { evil: true, forin: true, maxerr: 100 });
 
-var e = JSLINT.errors, w;
+var ok = {
+	"Use '===' to compare with 'null'.": true,
+	"Use '!==' to compare with 'null'.": true
+};
+
+var e = JSLINT.errors, found = 0, w;
 
 for ( var i = 0; i < e.length; i++ ) {
 	w = e[i];
-	print( "    Problem at line " + w.line + " character " + w.character + ": " + w.reason );
-	print( "\n\t" + w.evidence.replace(/^\s*((?:[\S\s]*\S)?)\s*$/, '$1') + "\n" );	
+
+	if ( !ok[ w.reason ] ) {
+		found++;
+		print( "\n" + w.evidence + "\n" );
+		print( "    Problem at line " + w.line + " character " + w.character + ": " + w.reason );
+	}
 }
 
-if ( e.length > 0 ) {
-	print( "\n" + e.length + " Error(s) found.\n" );
+if ( found > 0 ) {
+	print( "\n" + found + " Error(s) found.\n" );
 
 } else {
 	print( "JSLint check passed.\n" );
