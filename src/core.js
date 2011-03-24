@@ -624,33 +624,30 @@ plusQuery.extend({
 			IsFloating: false,
 			ProfileColor: 0
 		});
+	},
+	
+	$A: function (iterable) {
+		if (!iterable) {
+			return [];
+		}
+
+		if(iterable.toArray) {
+			return iterable.toArray();
+		}
+
+		var length = iterable.length || 0;
+		var results = new Array(length);
+
+		while (length--) {
+			results[length] = iterable[length];
+		}
+
+		return results;
 	}
 });
 
 return plusQuery;
 })();
-
-
-
-// 
-function $A(iterable) {
-if (!iterable) {
-	return [];
-}
-
-if(iterable.toArray) {
-	return iterable.toArray();
-}
-
-var length = iterable.length || 0;
-var results = new Array(length);
-
-while (length--) {
-	results[length] = iterable[length];
-}
-
-return results;
-}
 
 // 
 (function ($) {
