@@ -44,7 +44,7 @@
  */
 (function ($) {
  
-plusQuery.interfaces = {
+plusQuery.wrappers = {
 	Debug: function (object) {
 		this.original = object;
 		this.type = "Debug";
