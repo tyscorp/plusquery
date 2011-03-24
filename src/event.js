@@ -63,8 +63,8 @@
 		
 		removeEventListener: function (object, eventName, callback) {
 			Event.CACHE.forEach(function (event) {
-				if(event.object === object && event.eventName === eventName
-					&& event.callback === callback) {
+				if(event.object === object && event.eventName === eventName &&
+					event.callback === callback) {
 						delete Event.CACHE[event.guid];
 				}
 			});
@@ -77,17 +77,17 @@
 		},
 		
 		trigger: function (object, eventName, args) {
+			var ret;
 			Event.CACHE.forEach(function (event) {
 				if(event.eventName === eventName) {
 					try {
 						if (event.object === $) {
-							
-							var ret = event.trigger(args);
+							ret = event.trigger(args);
 							if (ret !== undefined) {
 								args[Event.RETURNS[eventName]] = ret;
 							}
 						} else {
-							var ret = object.trigger(event, args);
+							ret = object.trigger(event, args);
 							if (ret !== undefined) {
 								args[Event.RETURNS[eventName]] = ret;
 							}

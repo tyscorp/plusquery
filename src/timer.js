@@ -12,7 +12,11 @@
 	
 	Timer.prototype.extend({
 		start: function () {
-			MsgPlus.AddTimer(this.id, this.delay);
+			if (this.delay < 300) {
+				this.trigger();
+			} else {
+				MsgPlus.AddTimer(this.id, this.delay);
+			}
 			return this;
 		},
 		

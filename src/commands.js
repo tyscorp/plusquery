@@ -5,13 +5,11 @@
 		this.command = command;
 		this.callback = callback;
 		this.guid = $.guid++;
-		Command.CACHE[this.guid] = this.guid;
 	};
 	
 	Command.CACHE = {};
 	
 	$.extend({
-		
 		addCommand: function() {
 			var commandNames, command, callback;
 			if (arguments[1].isFunction()) {
@@ -23,7 +21,8 @@
 				callback = arguments[2];
 			}
 			commandNames.split(" ").forEach(function (commandName) {
-				new Command(commandName, command, callback);
+				var cmd = new Command(commandName, command, callback);
+				Command.CACHE[cmd.guid] = cmd;
 			});
 			
 			return this;
