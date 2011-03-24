@@ -9,7 +9,8 @@ JS_ENGINE ?= `which node nodejs`
 COMPILER = ${JS_ENGINE} ${BUILD_DIR}/uglify.js --unsafe
 POST_COMPILER = ${JS_ENGINE} ${BUILD_DIR}/post-compile.js
 
-BASE_FILES = ${SRC_DIR}/core.js\
+BASE_FILES = ${SRC_DIR}/extend.js\
+	${SRC_DIR}/core.js\
 	${SRC_DIR}/event.js\
 	${SRC_DIR}/timer.js\
 	${SRC_DIR}/commands.js
