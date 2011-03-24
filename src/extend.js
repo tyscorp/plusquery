@@ -156,10 +156,11 @@ Object.extend({
 	},
 	values: function (object) {
 		var results = [];
-		for (var property in object)
+		for (var property in object) {
 			if (object.hasOwnProperty(property)) {
 				results.push(object[property]);
 			}
+		}
 		return results;
 	},
 	clone: function (object) {
@@ -227,11 +228,16 @@ Array.prototype.extend({
 		return [].slice.call(this, 0);
 	},
 	indexOf: function (item, i) {
-		i || (i = 0);
+		if (!i) { i = 0; }
 		var length = this.length;
-		if (i < 0) i = length + i;
-		for (; i < length; i++)
-		if (this[i] === item) return i;
+		if (i < 0) {
+			i = length + i;
+		}
+		for (; i < length; i++) {
+			if (this[i] === item) {
+				return i;
+			}
+		}
 		return -1;
 	}
 });
@@ -248,15 +254,15 @@ Function.prototype.bind = (function (slice) {
 
 		if (args.length) {
 			return function () {
-				return arguments.length
-					? fn.apply(context, args.concat(slice.call(arguments)))
-					: fn.apply(context, args);
+				return arguments.length ?
+					fn.apply(context, args.concat(slice.call(arguments))) :
+					fn.apply(context, args);
 			};
 		}
 		return function () {
-			return arguments.length
-				? fn.apply(context, arguments)
-				: fn.call(context);
+			return arguments.length ?
+			fn.apply(context, arguments) :
+			fn.call(context);
 		};
 	};
 })(Array.prototype.slice);
