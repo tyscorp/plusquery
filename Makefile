@@ -23,7 +23,6 @@ PQ = ${DIST_DIR}/_plusquery.js
 PQ_MIN = ${DIST_DIR}/_plusquery.min.js
 
 PQ_VER = $(shell cat version.txt)
-VER = sed "s/@VERSION/${JQ_VER}/"
 
 DATE=$(shell git log -1 --pretty=format:%ad)
 
@@ -42,7 +41,7 @@ ${PQ}: ${MODULES} | ${DIST_DIR}
 #		sed 's/.function..plusQuery...{//' | \
 #		sed 's/}...plusQuery..;//' | \
 		sed 's/@DATE/'"${DATE}"'/' | \
-		${VER} > ${PQ};
+		sed 's/@VERSION/${PQ_VER}/' > ${PQ};
 		
 lint: plusquery
 	@@if test ! -z ${JS_ENGINE}; then \
