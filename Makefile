@@ -27,7 +27,7 @@ PQ_VER = $(shell cat version.txt)
 
 DATE=$(shell git log -1 --pretty=format:%ad)
 
-all: plusquery min lint
+all: plusquery min lint package
 	@@echo "plusQuery build complete."
 	
 ${DIST_DIR}:
@@ -67,5 +67,9 @@ ${PQ_MIN}: plusquery
 clean:
 	@@echo "Removing Distribution directory:" ${DIST_DIR}
 	@@rm -rf ${DIST_DIR}
+	
+package:
+	@@echo "Packaging script..."
+	@@zip /var/www/plusQuery.plsc ~/ScriptInfo.xml ${DIST_DIR}/_plusquery.js
 
 .PHONY: all plusquery lint min clean core
