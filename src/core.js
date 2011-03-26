@@ -74,37 +74,37 @@ plusQuery.fn = plusQuery.prototype = {
 		
 		// HANDLE: $(Debug)
 		if (typeof object.Trace === "unknown") {
-			return this.extend(new plusQuery.interfaces.Debug(object));
+			return this.extend(new plusQuery.wrappers.Debug(object));
 		}
 		
 		// HANDLE: $(Messenger)
 		if (typeof object.AutoSignin === "unknown") {
-			return this.extend(new plusQuery.interfaces.Messenger(object));
+			return this.extend(new plusQuery.wrappers.Messenger(object));
 		}
 		
 		// HANDLE: $(MsgPlus)
 		if (typeof object.LockMessenger === "unknown") {
-			return this.extend(new plusQuery.interfaces.MsgPlus(object));
+			return this.extend(new plusQuery.wrappers.MsgPlus(object));
 		}
 		
 		// HANDLE: $(Contacts)
 		if (typeof object.GetContact === "unknown") {
-			return this.extend(new plusQuery.interfaces.Contacts(object));
+			return this.extend(new plusQuery.wrappers.Contacts(object));
 		}
 		
 		// HANDLE: $(Emoticons)
 		if (typeof object.GetEmoticons === "unknown") {
-			return this.extend(new plusQuery.interfaces.Emoticons(object));
+			return this.extend(new plusQuery.wrappers.Emoticons(object));
 		}
 		
 		// Handle $(ChatWnds)
 		if (object.Count) {
-			return this.extend(new plusQuery.interfaces.ChatWnds(object));
+			return this.extend(new plusQuery.wrappers.ChatWnds(object));
 		}
 		
 		// Handle $(ChatWnd)
 		if (typeof object.SendMessage === "unknown") {
-			return this.extend(new plusQuery.interfaces.ChatWnd(object));
+			return this.extend(new plusQuery.wrappers.ChatWnd(object));
 		}
 		
 		// HANDLE: $(Contact)
@@ -116,7 +116,7 @@ plusQuery.fn = plusQuery.prototype = {
 			typeof object.CurrentMedia !== "undefined" &&
 			typeof object.DisplayPicture !== "undefined") {
 			
-			return this.extend(new plusQuery.interfaces.Contact(object));
+			return this.extend(new plusQuery.wrappers.Contact(object));
 		}
 		
 		// HANDLE: $(Emoticon)
@@ -124,22 +124,22 @@ plusQuery.fn = plusQuery.prototype = {
 			typeof object.Name !== "undefined" &&
 			typeof object.PictureFile !== "undefined") {
 			
-			return this.extend(new plusQuery.interfaces.Emoticon(object));
+			return this.extend(new plusQuery.wrappers.Emoticon(object));
 		}
 		
 		// HANDLE: $(PlusWnd)
 		if (typeof object.Close === "unknown") {
-			return this.extend(new plusQuery.interfaces.PlusWnd(object));
+			return this.extend(new plusQuery.wrappers.PlusWnd(object));
 		}
 		
 		// HANDLE: $(Interop)
 		if (typeof object.Call === "unknown") {
-			return this.extend(new plusQuery.interfaces.Interop(object));
+			return this.extend(new plusQuery.wrappers.Interop(object));
 		}
 		
 		// HANDLE: $(DataBloc)
 		if (typeof object.SetAt === "unknown") {
-			return this.extend(new plusQuery.interfaces.DataBloc(object));
+			return this.extend(new plusQuery.wrappers.DataBloc(object));
 		}
 		
 		return this;
