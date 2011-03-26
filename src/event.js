@@ -98,7 +98,9 @@
 				}
 			});
 			
-			return args[Event.RETURNS[eventName]];
+			if (args[Event.RETURNS[eventName]]) {
+				return args[Event.RETURNS[eventName]];
+			}
 		}
 	});
 	
