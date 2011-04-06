@@ -10,9 +10,9 @@
 	Event.CACHE = {};
 	
 	Event.RETURNS = {
-		ChatWndReceiveMessage: 3,
-		ChatWndSendMessage: 2,
-		OnGetScriptMenu: 1,
+		ChatWndReceiveMessage: 2,
+		ChatWndSendMessage: 1,
+		OnGetScriptMenu: 0,
 		OnGetScriptCommands: 0
 	};
 
@@ -83,22 +83,22 @@
 					try {
 						if (event.object === $) {
 							ret = event.trigger(args);
-							if (ret !== undefined) {
+							if (ret != null) {
 								args[Event.RETURNS[eventName]] = ret;
 							}
 						} else {
 							ret = object.trigger(event, args);
-							if (ret !== undefined) {
+							if (ret != null) {
 								args[Event.RETURNS[eventName]] = ret;
 							}
 						}
 					} catch (err) {
-							$(Debug).Trace(err.name + ": " + err.message + " (" + err.number + ")\n\tEvent: " + eventName);
+						$(Debug).Trace(err.name + ": " + err.message + " (" + err.number + ")\n\tEvent: " + eventName);
 					}
 				}
 			});
 			
-			if (args[Event.RETURNS[eventName]]) {
+			if (args != null && args[Event.RETURNS[eventName]] != null) {
 				return args[Event.RETURNS[eventName]];
 			}
 		}
@@ -301,5 +301,14 @@ OnGetScriptMenu = function () {
 OnGetScriptCommands = function () {
 	var args = plusQuery.$A(arguments);
 	args.push([]);
-	return plusQuery.trigger(plusQuery, "OnGetScriptCommands", args);
+	var cmds = plusQuery.trigger(plusQuery, "OnGetScriptCommands", args);
+	var cmdStr = "<ScriptCommands>";
+	for (var i = 0; i < cmds.length; i++) {
+		cmdStr += "<Command>";
+		cmdStr += "<Name>" + (cmds[i].Name || "") + "</Name>";
+		cmdStr += "<Description>" + (cmds[i].Description || "") + "</Description>";
+		cmdStr += "<Parameters>" + (cmds[i].Parameters || "") + "</Parameters>";
+		cmdStr += "</Command>";
+	}
+	return cmdStr + "</ScriptCommands>";
 };
