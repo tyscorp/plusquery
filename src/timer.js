@@ -4,7 +4,7 @@
 		this.callback = callback;
 		this.delay = delay;
 		this.repeat = repeat;
-		this.id = "TYSCRIPT#" + TYSCRIPT.guid++;
+		this.id = "plusQuery#" + $.guid++;
 		Timer.CACHE[this.id] = this;
 	};
 	
@@ -14,6 +14,8 @@
 		start: function () {
 			if (this.delay < 300) {
 				this.trigger();
+			} else if(this.delay > 86400000) {
+				return (new Timer(this.callback, this.delay - 86400000, this.repeat)).start();
 			} else {
 				MsgPlus.AddTimer(this.id, this.delay);
 			}
@@ -56,9 +58,9 @@
 	});
 	
 	$.addEventListener('Timer', function(timerId) {
-		if(timerId.match(/TYSCRIPT#(\d+)/) && Timer.CACHE[timerId].callback)
+		if(timerId.match(/plusQuery#(\d+)/) && Timer.CACHE[timerId] && Timer.CACHE[timerId].callback)
 		{
-			Timer.CACHE[this.id].trigger();
+			Timer.CACHE[timerId].trigger();
 		}
 	});
 
