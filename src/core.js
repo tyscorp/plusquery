@@ -52,7 +52,9 @@ plusQuery.extend({
 		}
 
 		return results;
-	}
+	},
+	
+	version: "@VERSION"
 });
 
 plusQuery.fn = plusQuery.prototype = {
