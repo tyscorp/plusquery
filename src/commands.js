@@ -1,8 +1,8 @@
 (function ($) {
 	
-	var Command = function (commandName, command, callback) {
+	var Command = function (commandName, external, callback) {
 		this.commandName = commandName.toUpperCase();
-		this.command = command;
+		this.external = (external != null ? external : (commandName.substr(0, 1) === "/" ? false : true) );
 		this.callback = callback;
 		this.guid = $.guid++;
 	};
@@ -11,17 +11,18 @@
 	
 	$.extend({
 		addCommand: function() {
-			var commandNames, command, callback;
+			var commandNames, external, callback;
 			if (arguments[1].isFunction()) {
 				commandNames = arguments[0];
 				callback = arguments[1];
 			} else {
 				commandNames = arguments[0];
-				command = arguments[1];
+				external = arguments[1];
 				callback = arguments[2];
 			}
+			
 			commandNames.split(" ").forEach(function (commandName) {
-				var cmd = new Command(commandName, command, callback);
+				var cmd = new Command(commandName, external, callback);
 				Command.CACHE[cmd.guid] = cmd;
 			});
 			
@@ -32,20 +33,24 @@
 		//	Command.CACHE[this.guid]
 		},
 		
-		triggerCommand: function(chatWnd, contact, parameters, message) {
-			
+		triggerCommand: function(chatWnd, contact, command, parameters, message, external) {
+			Command.CACHE.forEach(function (cmd) {
+				if (cmd.commandName === command && cmd.external === external) {
+					cmd.callback(chatWnd, contact, parameters, message);
+				}
+			});
 		}
 	});
 	
-	/*$.addEventListener("ChatWndReceiveMessage", function (chatWnd, origin, message, msgKind) {
+	$.addEventListener("ChatWndReceiveMessage", function (chatWnd, origin, message, msgKind) {
 		if (msgKind === 1)
 		{
-			$.triggerCommand($(chatWnd), $(chatWnd.Contacts).GetContact(origin), message.split(' ').slice(1).join(' '), message);
+			$.triggerCommand($(chatWnd), $(chatWnd.Contacts).GetContact(origin), message.split(' ')[0].toUpperCase(), message.split(' ').slice(1).join(' '), message, true);
 		}
 	});
 	
 	$.addEventListener("ChatWndSendMessage", function (chatWnd, message) {
-		var tmp = $.triggerCommand($(chatWnd), $(chatWnd).Contacts.GetContact(Messenger.MyEmail), message.split(' ')[0].toUpperCase(), message.split(' ').slice(1).join(' '), message);
+		var tmp = $.triggerCommand($(chatWnd), $(chatWnd).Contacts.GetContact(Messenger.MyEmail), message.split(' ')[0].toUpperCase(), message.split(' ').slice(1).join(' '), message, false);
 		return (tmp === undefined ? message : tmp);
 	});
 	
@@ -53,6 +58,6 @@
 		Command.CACHE.forEach(function (command) {
 			
 		});
-	});*/
+	});
 
 })(plusQuery);
