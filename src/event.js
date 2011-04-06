@@ -123,22 +123,22 @@
 })(plusQuery);
 
 OnEvent_Signin = function () {
-	var args = plusQuery.plusQuery.$A(arguments);
+	var args = plusQuery.$A(arguments);
 	return plusQuery.trigger(plusQuery, "Signin", args);
 };
 
 OnEvent_SigninReady = function () {
-	var args = plusQuery.plusQuery.$A(arguments);
+	var args = plusQuery.$A(arguments);
 	return plusQuery.trigger(plusQuery, "SigninReady", args);
 };
 
 OnEvent_Signout = function () {
-	var args = plusQuery.plusQuery.$A(arguments);
+	var args = plusQuery.$A(arguments);
 	return plusQuery.trigger(plusQuery, "Signout", args);
 };
 
 OnEvent_MyStatusChange = function () {
-	var args = plusQuery.plusQuery.$A(arguments);
+	var args = plusQuery.$A(arguments);
 	return plusQuery.trigger(plusQuery.MyContact(), "MyStatusChange", args);
 };
 
