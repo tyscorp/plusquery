@@ -12,7 +12,7 @@
 	$.extend({
 		addCommand: function() {
 			var commandNames, external, callback;
-			if (arguments[1].isFunction()) {
+			if ($.isFunction(arguments[1])) {
 				commandNames = arguments[0];
 				callback = arguments[1];
 			} else {
@@ -34,30 +34,48 @@
 		},
 		
 		triggerCommand: function(chatWnd, contact, command, parameters, message, external) {
+			var ret = message;
+			
 			$.forEach(Command.CACHE, function (cmd) {
-				if (cmd.commandName === command && cmd.external === external) {
-					cmd.callback(chatWnd, contact, parameters, message);
+				if (cmd.commandName.toUpperCase() === command.toUpperCase() && cmd.external === external) {
+					ret = cmd.callback(chatWnd, contact, parameters, message);
 				}
 			});
+			
+			return ret;
 		}
 	});
 	
 	$.addEventListener("ChatWndReceiveMessage", function (chatWnd, origin, message, msgKind) {
 		if (msgKind === 1)
 		{
-			$.triggerCommand($(chatWnd), $(chatWnd.Contacts).GetContact(origin), message.split(' ')[0].toUpperCase(), message.split(' ').slice(1).join(' '), message, true);
+			var match = /^([^ \n\r\v\xA0]*)[ \n\r\v\xA0]?([\s\S]*)$/.exec(message);
+			
+			if (match) {
+				var command = match[1];
+				var parameters = match[2];
+				
+				$.triggerCommand($(chatWnd), $(chatWnd.Contacts).GetContact(origin), command, parameters, message, true);
+			}
 		}
 	});
 	
 	$.addEventListener("ChatWndSendMessage", function (chatWnd, message) {
-		var tmp = $.triggerCommand($(chatWnd), $(chatWnd).Contacts.GetContact(Messenger.MyEmail), message.split(' ')[0].toUpperCase(), message.split(' ').slice(1).join(' '), message, false);
-		return (tmp === undefined ? message : tmp);
+		var match = /^\/([^ \n\r\v\xA0\/][^ \n\r\v\xA0]*)(?:[ \n\r\v\xA0]([\s\S]*))?$/.exec(message);
+		
+		if (match) {
+			var command = "/" + match[1];
+			var parameters = match[2];
+		 
+			var tmp = $.triggerCommand($(chatWnd), $.MyContact, command, parameters, message, false);
+			return (tmp != null ? tmp : message);
+		}
 	});
 	
 	$.addEventListener("OnGetScriptCommands", function (commands) {
-		Command.CACHE.forEach(function (command) {
+		//Command.CACHE.forEach(function (command) {
 			
-		});
+		//});
 	});
 
 })(plusQuery);
