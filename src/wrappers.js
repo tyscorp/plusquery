@@ -806,7 +806,7 @@ $.extend($.wrappers.Contacts.prototype, {
 			return $(this.original.GetContact(str));
 		} else {
 			for (var i = 0; i < this.length; i++) {
-				if (this[i].Name === str) {
+				if (this[i].Name() === str) {
 					return this[i]; // Only returns the first match
 				}
 			}
