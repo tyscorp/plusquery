@@ -48,9 +48,7 @@ plusQuery.wrappers = {
 	Debug: function (object) {
 		this.original = object;
 		this.type = "Debug";
-		
-		this.DebuggingWindowVisible = this.original.DebuggingWindowVisible;
-		
+
 		this.init.call(this, this.original);
 		
 		return this;
@@ -59,21 +57,6 @@ plusQuery.wrappers = {
 	Messenger: function (object) {
 		this.original = object;
 		this.type = "Messenger";
-		
-		this.Version = this.original.Version;
-		this.VersionBuild = this.original.VersionBuild;
-		this.ContactListWndHandle = this.original.ContactListWndHandle;
-		this.CurrentChats = this.original.CurrentChats;
-		this.ReceiveFileDir = this.original.ReceiveFileDir;
-		this.MyContacts = this.original.MyContacts;
-		this.MyEmail = this.original.MyEmail;
-		this.MyUserId = this.original.MyUserId;
-		this.MyStatus = this.original.MyStatus;
-		this.MyName = this.original.MyName;
-		this.MyPersonalMessage = this.original.MyPersonalMessage;
-		this.MyCurrentMedia = this.original.MyCurrentMedia;
-		this.MyDisplayPicture = this.original.MyDisplayPicture;
-		this.CustomEmoticons = this.original.CustomEmoticons;
 		
 		this.init.call(this, this.original);
 		
@@ -92,9 +75,7 @@ plusQuery.wrappers = {
 	ChatWnds: function (object) {
 		this.original = object;
 		this.type = "ChatWnds";
-		
-		this.Count = this.original.Count;
-		
+
 		this.init.call(this, this.original);
 		
 		return this;
@@ -103,14 +84,6 @@ plusQuery.wrappers = {
 	ChatWnd: function (object) {
 		this.original = object;
 		this.type = "ChatWnd";
-	
-		this.Handle = this.original.Handle;
-		this.Contacts = this.original.Contacts;
-		this.EditText = this.original.EditText;
-		this.EditChangeAllowed = this.original.EditChangeAllowed;
-		this.ChatLogEnabled = this.original.ChatLogEnabled;
-		this.OverrideFmtEnabled = this.original.OverrideFmtEnabled;
-		this.IsMobileChat = this.original.IsMobileChat;
 		
 		this.init.call(this, this.original);
 		
@@ -121,8 +94,6 @@ plusQuery.wrappers = {
 		this.original = object;
 		this.type = "Contacts";
 		
-		this.Count = this.original.Count;
-		
 		this.init.call(this, this.original);
 		
 		return this;
@@ -131,17 +102,6 @@ plusQuery.wrappers = {
 	Contact: function (object) {
 		this.original = object;
 		this.type = "Contact";
-		
-		this.Email = this.original.Email;
-		this.Network = this.original.Network;
-		this.Status = this.original.Status;
-		this.Name = this.original.Name;
-		this.PersonalMessage = this.original.PersonalMessage;
-		this.CurrentMedia = this.original.CurrentMedia;
-		this.Blocked = this.original.Blocked;
-		this.DisplayPicture = this.original.DisplayPicture;
-		this.IsFloating = this.original.IsFloating;
-		this.ProfileColor = this.original.ProfileColor;
 		
 		this.init.call(this, this.original);
 		
@@ -152,8 +112,6 @@ plusQuery.wrappers = {
 		this.original = object;
 		this.type = "Emoticons";
 		
-		this.Count = this.original.Count;
-		
 		this.init.call(this, this.original);
 		
 		return this;
@@ -163,10 +121,6 @@ plusQuery.wrappers = {
 		this.original = object;
 		this.type = "Emoticon";
 		
-		this.Shortcut = this.original.Shortcut;
-		this.Name = this.original.Name;
-		this.PictureFile = this.original.PictureFile;
-		
 		this.init.call(this, this.original);
 		
 		return this;
@@ -175,11 +129,6 @@ plusQuery.wrappers = {
 	PlusWnd: function (object) {
 		this.original = object;
 		this.type = "PlusWnd";
-		
-		this.Handle = this.original.Handle;
-		this.Visible = this.original.Visible;
-		this.WindowId = this.original.WindowId;
-		this.BaseColor = this.original.BaseColor;
 		
 		this.init.call(this, this.original);
 		
@@ -198,10 +147,7 @@ plusQuery.wrappers = {
 	DataBloc: function (object) {
 		this.original = object;
 		this.type = "DataBloc";
-		
-		this.Size = this.original.Size;
-		this.DataPtr = this.original.DataPtr;
-		
+
 		this.init.call(this, this.original);
 		
 		return this;
@@ -221,7 +167,15 @@ $.wrappers.Debug.prototype = {
 	
 	ClearDebuggingWindow: function () {
 		return this.original.ClearDebuggingWindow();
-	}	
+	},
+	
+	DebuggingWindowVisible: function (visibility) {
+		if (typeof visibility !== "undefined") {
+			this.original.DebuggingWindowVisible = visibility;
+		}
+		
+		return visibility;
+	}
 };
 
 $.wrappers.Messenger.prototype = {
@@ -237,7 +191,109 @@ $.wrappers.Messenger.prototype = {
 	
 	OpenChat: function (Contact) {
 		return this.original.OpenChat(Contact);
+	},
+	
+	Version: function () {
+		return this.original.Version;
+	},
+	
+	VersionBuild: function () {
+		return this.original.VersionBuild;
+	},
+	
+	ContactListWndHandle: function () {
+		return this.original.ContactListWndHandle;
+	},
+	
+	CurrentChats: function () {
+		return this.original.CurrentChats;
+	},
+	
+	ReceiveFileDir: function () {
+		return this.original.ReceiveFileDir;
+	},
+	
+	MyContacts: function () {
+		return this.original.MyContacts;
+	},
+	
+	MyEmail: function () {
+		return this.original.MyEmail;
+	},
+	
+	MyUserId: function () {
+		return this.original.MyUserId;
+	},
+	
+	MyStatus: function (newStatus) {
+		if (typeof newStatus !== "undefined") {
+			this.original.MyStatus = newStatus;
+		}
+		
+		return this.original.MyStatus;
+	},
+	
+	MyName: function (newName) {
+		if (typeof newName !== "undefined") {
+			this.original.MyName = newName;
+		}
+		
+		return this.original.MyName;
+	},
+	
+	MyPersonalMessage: function (newPersonalMessage) {
+		if (typeof newPersonalMessage !== "undefined") {
+			this.original.MyPersonalMessage = newPersonalMessage;
+		}
+		
+		return this.original.MyPersonalMessage;
+	},
+	
+	MyCurrentMedia: function (newMedia) {
+		if (typeof newMedia !== "undefined") {
+			/*
+			 *  The following was written by -dt-
+			 *  Taken from http://version.thedt.net/scripts/plusscripts/musicNowplaying/main.js
+			 */
+			var media = Interop.Allocate(512);
+				media.WriteString(0, "\\0" + newMedia.type + "\\0" + newMedia.enabled + "\\0" + newMedia.format +"\\0" + newMedia.title +"\\0" + newMedia.artist + "\\0" + newMedia.album + "\\0" + newMedia.contentID + "\\0");
+			
+			//write our copyDataStruct Structure
+			var copyDataStruct = Interop.Allocate(12);
+			copyDataStruct.WriteDWORD(0, 0x547); //dwData
+			copyDataStruct.WriteDWORD(4, media.Size); //cbData
+			copyDataStruct.WriteDWORD(8, media.DataPtr);  //lpData
+			
+			
+			//Send it to all open messengers
+			var hMSGRUI = 0;
+			do {
+				hMSGRUI = Interop.Call("User32", "FindWindowExW", 0, hMSGRUI, "MsnMsgrUIManager", 0);
+				if (hMSGRUI > 0) {
+					Interop.Call("User32", "SendMessageW", hMSGRUI, 0x4A, 0, copyDataStruct);	
+				}
+			} while(hMSGRUI !== 0);
+			
+			media = null;
+			copyDataStruct = null;
+		}
+		
+		return this.original.MyCurrentMedia;
+	},
+	
+	MyDisplayPicture: function (newDisplayPicture) {
+		if (typeof newDisplayPicture !== "undefined") {
+			this.original.MyDisplayPicture = newDisplayPicture;
+		}
+		
+		return this.original.MyDisplayPicture;
+	},
+	
+	CustomEmoticons: function () {
+		return this.original.CustomEmoticons;
 	}
+	
+	
 };
 
 $.wrappers.MsgPlus.prototype = {
@@ -305,6 +361,10 @@ $.wrappers.ChatWnds.prototype = {
 	
 	Iterator: function () {
 		return this.original.Iterator();
+	},
+	
+	Count: function () {
+		return this.original.Count;
 	}
 };
 
@@ -357,6 +417,46 @@ $.wrappers.ChatWnd.prototype = {
 	
 	HistoryText_GetTextRange: function (StartIdx, EndIdx, AddObjectCodes) {
 		return this.original.HistoryText_GetTextRange(StartIdx, EndIdx, AddObjectCodes);
+	},
+	
+	Handle: function () {
+		return this.original.Handle;
+	},
+	
+	Contacts: function () {
+		return this.original.Contacts;
+	},
+	
+	EditText: function (newEditText) {
+		if (typeof newEditText !== "undefined") {
+			this.original.EditText = newEditText;
+		}
+		
+		return this.original.EditText;
+	},
+	
+	EditChangeAllowed: function () {
+		return this.original.EditChangeAllowed;
+	},
+	
+	ChatLogEnabled: function (newChatLogEnabled) {
+		if (typeof newChatLogEnabled !== "undefined") {
+			this.original.ChatLogEnabled = newChatLogEnabled;
+		}
+		
+		return this.original.ChatLogEnabled;
+	},
+	
+	OverrideFmtEnabled: function (newOverrideFmtEnabled) {
+		if (typeof newOverrideFmtEnabled !== "undefined") {
+			this.original.OverrideFmtEnabled = newOverrideFmtEnabled;
+		}
+		
+		return this.original.OverrideFmtEnabled;
+	},
+	
+	IsMobileChat: function () {
+		return this.original.IsMobileChat;
 	}
 };
 
@@ -369,12 +469,68 @@ $.wrappers.Contacts.prototype = {
 	
 	GetContact: function (Email) {
 		return this.original.GetContact(Email);
+	},
+	
+	Count: function () {
+		return this.original.Count;
 	}
 };
 
 $.wrappers.Contact.prototype = {
 	init: function (object) {
 		
+	},
+	
+	Email: function () {
+		return this.original.Email;
+	},
+	
+	Network: function () {
+		return this.original.Network;
+	},
+	
+	Status: function () {
+		return this.original.Status;
+	},
+	
+	Name: function () {
+		return this.original.Name;
+	},
+	
+	PersonalMessage: function () {
+		return this.original.PersonalMessage;
+	},
+	
+	CurrentMedia: function () {
+		return this.original.CurrentMedia;
+	},
+	
+	Blocked: function (newBlocked) {
+		if (typeof newBlocked !== "undefined") {
+			this.original.Blocked = newBlocked;
+		}
+		
+		return this.original.Blocked;
+	},
+	
+	DisplayPicture: function () {
+		return this.original.DisplayPicture;
+	},
+	
+	IsFloating: function (newIsFloating) {
+		if (typeof newIsFloating !== "undefined") {
+			this.original.IsFloating = newIsFloating;
+		}
+		
+		return this.original.IsFloating;
+	},
+	
+	ProfileColor: function (newProfileColor) {
+		if (typeof newProfileColor !== "undefined") {
+			this.original.ProfileColor = newProfileColor;
+		}
+		
+		return this.original.ProfileColor;
 	}
 };
 
@@ -387,18 +543,57 @@ $.wrappers.Emoticons.prototype = {
 	
 	GetEmoticon: function (Shortcut) {
 		return original.GetEmoticon(Shortcut);
+	},
+	
+	Count: function () {
+		return this.original.Count;
 	}
 };
 
 $.wrappers.Emoticon.prototype = {
 	init: function (object) {
 		
+	},
+	
+	Shortcut: function () {
+		return this.original.Shortcut;
+	},
+	
+	Name: function () {
+		return this.original.Name;
+	},
+	
+	PictureFile: function () {
+		return this.original.PictureFile;
 	}
 };
 
+//really can't be bothered...
 $.wrappers.PlusWnd.prototype = {
 	init: function (object) {
 		
+	},
+	
+	//[...]
+	
+	Handle: function () {
+		return this.original.Handle;
+	},
+	
+	Visible: function (newVisible) {
+		if (typeof newVisible !== "undefined") {
+			this.original.Visible = newVisible;
+		}
+		
+		return this.original.Visible;
+	},
+	
+	WindowId: function () {
+		return this.original.WindowId;
+	},
+
+	BaseColor: function (newBaseColor) {
+		this.original.BaseColor = newBaseColor;
 	}
 };
 
@@ -451,44 +646,56 @@ $.wrappers.DataBloc.prototype = {
 		return this.original.SetAt(Offset, Byte);
 	},
 	
-	ReadString: function () {
-		return this.original.ReadString();
+	ReadString: function (Offset, ReadUnicode, Size) {
+		return this.original.ReadString(Offset, ReadUnicode, Size);
 	},
 	
-	WriteString: function (Offset, String, WriteUnicode) {
-		return this.original.WriteString(Offset, String, WriteUnicode);
+	WriteString: function (Offset, Str, WriteUnicode) {
+		return this.original.WriteString(Offset, Str, WriteUnicode);
 	},
 	
-	ReadBSTR: function () {
-		return this.original.ReadBSTR();
+	ReadBSTR: function (Offset) {
+		return this.original.ReadBSTR(Offset);
 	},
 	
-	WriteBSTR: function () {
-		return this.original.WriteBSTR();
+	WriteBSTR: function (Offset, Str) {
+		return this.original.WriteBSTR(Offset, Str);
 	},
 	
-	ReadWORD: function () {
-		return this.original.ReadWORD();
+	ReadWORD: function (Offset) {
+		return this.original.ReadWORD(Offset);
 	},
 	
-	WriteWORD: function () {
-		return this.original.WriteWORD();
+	WriteWORD: function (Offset, Data) {
+		return this.original.WriteWORD(Offset, Data);
 	},
 	
-	ReadDWORD: function () {
-		return this.original.ReadDWORD();
+	ReadDWORD: function (Offset) {
+		return this.original.ReadDWORD(Offset);
 	},
 	
-	WriteDWORD: function () {
-		return this.original.WriteDWORD();
+	WriteDWORD: function (Offset, Data) {
+		return this.original.WriteDWORD(Offset, Data);
 	},
 	
-	ReadInterfacePtr: function () {
-		return this.original.ReadInterfacePtr();
+	ReadInterfacePtr: function (Offset) {
+		return this.original.ReadInterfacePtr(Offset);
 	},
 	
-	WriteInterfacePtr: function () {
-		return this.original.WriteInterfacePtr();
+	WriteInterfacePtr: function (Offset, Obj) {
+		return this.original.WriteInterfacePtr(Offset, Obj);
+	},
+	
+	Size: function (newSize) {
+		if (typeof newSize !== "undefined") {
+			this.original.Size = newSize;
+		}
+		
+		return this.original.Size;
+	},
+	
+	DataPtr: function () {
+		return this.original.DataPtr;
 	}
 };
 
@@ -521,29 +728,19 @@ $.wrappers.Debug.prototype.extend({
  *  Adds 
  *  
  */
-$.wrappers.Messenger = function (object) {
-	this.original = object;
-	this.type = "Messenger";
+$.wrappers.Messenger.prototype.extend({
+	CurrentChats: function () {
+		return $(this.original.CurrentChats);
+	},
 	
-	this.Version = this.original.Version;
-	this.VersionBuild = this.original.VersionBuild;
-	this.ContactListWndHandle = this.original.ContactListWndHandle;	
-	this.ReceiveFileDir = this.original.ReceiveFileDir;
-	this.MyEmail = this.original.MyEmail;
-	this.MyUserId = this.original.MyUserId;
-	this.MyStatus = this.original.MyStatus;
-	this.MyName = this.original.MyName;
-	this.MyPersonalMessage = this.original.MyPersonalMessage;
-	this.MyCurrentMedia = this.original.MyCurrentMedia;
-	this.MyDisplayPicture = this.original.MyDisplayPicture;
+	MyContacts: function () {
+		return $(this.original.MyContacts);
+	},
 	
-	// Extend these three to become plusQuery objects
-	this.CurrentChats = $(this.original.CurrentChats);
-	this.MyContacts = $(this.original.MyContacts);
-	this.CustomEmoticons = $(this.original.CustomEmoticons);
-	
-	return this;
-};
+	CustomEmoticons: function () {
+		return $(this.original.CustomEmoticons);
+	}
+});
 
 // MsgPlus
 $.wrappers.MsgPlus.prototype.extend({
@@ -576,11 +773,8 @@ $.wrappers.MsgPlus.prototype.extend({
 });
 
 // ChatWnds
-$.wrappers.ChatWnds = function (object) {
-	this.original = object;
-	this.type = "ChatWnds";
-	
-	for (var e = new Enumerator(this.original), i = 0; !e.atEnd(); e.moveNext(), i++) {
+$.wrappers.ChatWnds.prototype.init = function (object) {
+	for (var e = new Enumerator(original), i = 0; !e.atEnd(); e.moveNext(), i++) {
 		this[i] = $(e.item());
 	}
 	this.length = i;
@@ -596,15 +790,12 @@ $.wrappers.ChatWnd.prototype.extend({
 });
 
 // Contacts
-$.wrappers.Contacts = function(object) {
-	this.original = object;
-	this.type = "Contacts";
-	
+$.wrappers.Contacts.prototype.init = function(object) {
 	this[0] = $.MyContact();
 	for (var e = new Enumerator(this.original), i = 1; !e.atEnd(); e.moveNext(), i++) {
 		this[i] = $(e.item());
 	}
-	this.length = i+1;
+	this.length = i + 1;
 };
 
 $.wrappers.Contacts.prototype.extend({
