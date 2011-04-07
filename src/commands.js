@@ -34,7 +34,7 @@
 		},
 		
 		triggerCommand: function(chatWnd, contact, command, parameters, message, external) {
-			Command.CACHE.forEach(function (cmd) {
+			$.forEach(Command.CACHE, function (cmd) {
 				if (cmd.commandName === command && cmd.external === external) {
 					cmd.callback(chatWnd, contact, parameters, message);
 				}

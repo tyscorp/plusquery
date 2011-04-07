@@ -10,7 +10,7 @@
 	
 	Timer.CACHE = {};
 	
-	Timer.prototype.extend({
+	$.extend(Timer.prototype, {
 		start: function () {
 			if (this.delay < 300) {
 				this.trigger();

@@ -714,7 +714,7 @@ $.wrappers.DataBloc.prototype = {
  *
  *  [[plusQuery.interfaces.Debug.Trace]]
  */
-$.wrappers.Debug.prototype.extend({
+$.extend($.wrappers.Debug.prototype, {
 	Enabled: true,
 	
 	Trace: function (Text) {
@@ -728,7 +728,7 @@ $.wrappers.Debug.prototype.extend({
  *  Adds 
  *  
  */
-$.wrappers.Messenger.prototype.extend({
+$.extend($.wrappers.Messenger.prototype, {
 	CurrentChats: function () {
 		return $(this.original.CurrentChats);
 	},
@@ -743,7 +743,7 @@ $.wrappers.Messenger.prototype.extend({
 });
 
 // MsgPlus
-$.wrappers.MsgPlus.prototype.extend({
+$.extend($.wrappers.MsgPlus.prototype, {
 	// The default DisplayToast function only allows a string as a callback.
 	// Apparently the callback function has to be in global scope, too. :(
 	// Silly Patchou. I cannot fathom why he would code it like this...
@@ -781,7 +781,7 @@ $.wrappers.ChatWnds.prototype.init = function (object) {
 };
 
 // ChatWnd
-$.wrappers.ChatWnd.prototype.extend({
+$.extend($.wrappers.ChatWnd.prototype, {
 	trigger: function (event, args) {
 		if (event.object && event.object.Handle && event.object.Handle === this.Handle) {
 			return event.callback.apply(this, args);
@@ -798,7 +798,7 @@ $.wrappers.Contacts.prototype.init = function(object) {
 	this.length = i + 1;
 };
 
-$.wrappers.Contacts.prototype.extend({
+$.extend($.wrappers.Contacts.prototype, {
 	GetContact: function (str) {
 		if (str.toLowerCase() === Messenger.MyEmail.toLowerCase()) {
 			return this[0];

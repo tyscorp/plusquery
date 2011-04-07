@@ -16,7 +16,7 @@
 		OnGetScriptCommands: 0
 	};
 
-	Event.prototype.extend({
+	$.extend(Event.prototype, {
 	
 		start: function () {
 			$.addEventListener(this.object, this.eventName, this.callback);
@@ -41,7 +41,7 @@
 			var object, eventName, callback;
 
 			// Simulating parametric polymorphism
-			if (arguments[0].isString()) {
+			if ($.isString(arguments[0])) {
 				object = $;
 				eventName = arguments[0];
 				callback = arguments[1];
@@ -62,7 +62,7 @@
 		},
 		
 		removeEventListener: function (object, eventName, callback) {
-			Event.CACHE.forEach(function (event) {
+			$.forEach(Event.CACHE, function (event) {
 				if(event.object === object && event.eventName === eventName &&
 					event.callback === callback) {
 						delete Event.CACHE[event.guid];
@@ -78,7 +78,7 @@
 		
 		trigger: function (object, eventName, args) {
 			var ret;
-			Event.CACHE.forEach(function (event) {
+			$.forEach(Event.CACHE, function (event) {
 				if(event.eventName === eventName) {
 					try {
 						if (event.object === $) {
@@ -104,7 +104,7 @@
 		}
 	});
 	
-	$.prototype.extend({
+	$.extend($.prototype, {
 		addEventListener: function (eventName, callback) {
 			return $.addEventListener(this, eventName, callback);
 		},
