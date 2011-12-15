@@ -112,6 +112,10 @@ plusQuery.extend({
 		return (new Date()).getTime();
 	},
 	
+	ScriptMenu: {},
+	
+	ScriptCommands: {},
+	
 	MyContact: function () {
 		return $({
 			Email: Messenger.MyEmail,
@@ -125,6 +129,84 @@ plusQuery.extend({
 			IsFloating: false,
 			ProfileColor: 0
 		});
+	},
+	
+	/*  We can test for all of the Messenger Plus! objects with
+	 *  reasonable certainty because the typeof the functions are
+	 *  "unknown", not "function".
+	 *  For those without functions, (Contact and Emoticon) we do a bit
+	 *  more testing just in case.
+	 */
+	typeofNative: function (object) {
+		// HANDLE: $(Debug)
+		if (typeof object.Trace === "unknown") {
+			return "Debug";
+		}
+		
+		// HANDLE: $(Messenger)
+		if (typeof object.AutoSignin === "unknown") {
+			return "Messenger";
+		}
+		
+		// HANDLE: $(MsgPlus)
+		if (typeof object.LockMessenger === "unknown") {
+			return "MsgPlus";
+		}
+		
+		// HANDLE: $(Contacts)
+		if (typeof object.GetContact === "unknown") {
+			return "Contacts";
+		}
+		
+		// HANDLE: $(Emoticons)
+		if (typeof object.GetEmoticons === "unknown") {
+			return "Emoticons";
+		}
+		
+		// Handle $(ChatWnds)
+		if (object.Count) {
+			return "ChatWnds";
+		}
+		
+		// Handle $(ChatWnd)
+		if (typeof object.SendMessage === "unknown") {
+			return "ChatWnd";
+		}
+		
+		// HANDLE: $(Contact)
+		if (typeof object.Email !== "undefined" &&
+			typeof object.Network !== "undefined" &&
+			typeof object.Status !== "undefined" &&
+			typeof object.Name !== "undefined" &&
+			typeof object.PersonalMessage !== "undefined" &&
+			typeof object.CurrentMedia !== "undefined" &&
+			typeof object.DisplayPicture !== "undefined") {
+			
+			return "Contact";
+		}
+		
+		// HANDLE: $(Emoticon)
+		if (typeof object.Shortcut !== "undefined" &&
+			typeof object.Name !== "undefined" &&
+			typeof object.PictureFile !== "undefined") {
+			
+			return "Emoticon";
+		}
+		
+		// HANDLE: $(PlusWnd)
+		if (typeof object.Close === "unknown") {
+			return "PlusWnd";
+		}
+		
+		// HANDLE: $(Interop)
+		if (typeof object.Call === "unknown") {
+			return "Interop";
+		}
+		
+		// HANDLE: $(DataBloc)
+		if (typeof object.SetAt === "unknown") {
+			return "DataBloc";
+		}
 	},
 	
 	$A: function (iterable) {
@@ -285,82 +367,13 @@ plusQuery.fn = plusQuery.prototype = {
 		if (!object || object instanceof plusQuery) {
 			return this;
 		}
-
-		/*  We can test for all of the Messenger Plus! objects with
-		 *  reasonable certainty because the typeof the functions are
-		 *  "unknown", not "function".
-		 *  For those without functions, (Contact and Emoticon) we do a bit
-		 *  more testing just in case.
-		 */
 		
-		// HANDLE: $(Debug)
-		if (typeof object.Trace === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.Debug(object));
-		}
-		
-		// HANDLE: $(Messenger)
-		if (typeof object.AutoSignin === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.Messenger(object));
-		}
-		
-		// HANDLE: $(MsgPlus)
-		if (typeof object.LockMessenger === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.MsgPlus(object));
-		}
-		
-		// HANDLE: $(Contacts)
-		if (typeof object.GetContact === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.Contacts(object));
-		}
-		
-		// HANDLE: $(Emoticons)
-		if (typeof object.GetEmoticons === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.Emoticons(object));
-		}
-		
-		// Handle $(ChatWnds)
-		if (object.Count) {
-			return $.extend(this, new plusQuery.wrappers.ChatWnds(object));
-		}
-		
-		// Handle $(ChatWnd)
-		if (typeof object.SendMessage === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.ChatWnd(object));
-		}
-		
-		// HANDLE: $(Contact)
-		if (typeof object.Email !== "undefined" &&
-			typeof object.Network !== "undefined" &&
-			typeof object.Status !== "undefined" &&
-			typeof object.Name !== "undefined" &&
-			typeof object.PersonalMessage !== "undefined" &&
-			typeof object.CurrentMedia !== "undefined" &&
-			typeof object.DisplayPicture !== "undefined") {
-			
-			return $.extend(this, new plusQuery.wrappers.Contact(object));
-		}
-		
-		// HANDLE: $(Emoticon)
-		if (typeof object.Shortcut !== "undefined" &&
-			typeof object.Name !== "undefined" &&
-			typeof object.PictureFile !== "undefined") {
-			
-			return $.extend(this, new plusQuery.wrappers.Emoticon(object));
-		}
-		
-		// HANDLE: $(PlusWnd)
-		if (typeof object.Close === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.PlusWnd(object));
-		}
-		
-		// HANDLE: $(Interop)
-		if (typeof object.Call === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.Interop(object));
-		}
-		
-		// HANDLE: $(DataBloc)
-		if (typeof object.SetAt === "unknown") {
-			return $.extend(this, new plusQuery.wrappers.DataBloc(object));
+		// Event stuff
+		$.extend(this, $.EventEmitter.create(object));
+	
+		// Wrap native object
+		if (plusQuery.wrappers[$.typeofNative(object)]) {
+			$.extend(this, new plusQuery.wrappers[$.typeofNative(object)](object));
 		}
 		
 		return this;

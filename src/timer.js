@@ -57,7 +57,7 @@
 		clearInterval: this.clearTimeout
 	});
 	
-	$.addEventListener('Timer', function(timerId) {
+	$.addListener('Timer', function(timerId) {
 		if(timerId.match(/plusQuery#(\d+)/) && Timer.CACHE[timerId] && Timer.CACHE[timerId].callback)
 		{
 			Timer.CACHE[timerId].trigger();

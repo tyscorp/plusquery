@@ -46,7 +46,7 @@
 		}
 	});
 	
-	$.addEventListener("ChatWndReceiveMessage", function (chatWnd, origin, message, msgKind) {
+	$.addListener("ChatWndReceiveMessage", function (chatWnd, origin, message, msgKind) {
 		if (msgKind === 1)
 		{
 			var match = /^([^ \n\r\v\xA0]*)[ \n\r\v\xA0]?([\s\S]*)$/.exec(message);
@@ -60,7 +60,7 @@
 		}
 	});
 	
-	$.addEventListener("ChatWndSendMessage", function (chatWnd, message) {
+	$.addListener("ChatWndSendMessage", function (chatWnd, message) {
 		var match = /^\/([^ \n\r\v\xA0\/][^ \n\r\v\xA0]*)(?:[ \n\r\v\xA0]([\s\S]*))?$/.exec(message);
 		
 		if (match) {
@@ -72,7 +72,7 @@
 		}
 	});
 	
-	$.addEventListener("OnGetScriptCommands", function (commands) {
+	$.addListener("OnGetScriptCommands", function (commands) {
 		//Command.CACHE.forEach(function (command) {
 			
 		//});

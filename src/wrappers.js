@@ -780,15 +780,6 @@ $.wrappers.ChatWnds.prototype.init = function (object) {
 	this.length = i;
 };
 
-// ChatWnd
-$.extend($.wrappers.ChatWnd.prototype, {
-	trigger: function (event, args) {
-		if (event.object && event.object.Handle && event.object.Handle === this.Handle) {
-			return event.callback.apply(this, args);
-		}
-	}
-});
-
 // Contacts
 $.wrappers.Contacts.prototype.init = function(object) {
 	this[0] = $.MyContact();
